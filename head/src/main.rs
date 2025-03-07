@@ -6,7 +6,7 @@ use std::process;
 
 #[derive(Parser)]
 #[command(name = "head")]
-#[command(about = "Displays file contents line-by-line, from the start of the file")]
+#[command(about = "Displays file contents from the start of the file")]
 pub struct Args {
     file: String,
 
