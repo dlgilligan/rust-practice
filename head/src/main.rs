@@ -10,7 +10,7 @@ use std::process;
 pub struct Args {
     file: String,
 
-    #[arg(short, long, default_value = "10")]
+    #[arg(short = 'n', long, default_value = "10")]
     lines: usize,
 }
 
