@@ -3,7 +3,7 @@ use std::io::Error;
 mod terminal;
 use terminal::{Position, Size, Terminal};
 
-const NAME: &str = env!("CARGO_PKG_NAME");
+const NAME: &str = "Practice";
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 pub struct Editor {
@@ -85,7 +85,7 @@ impl Editor {
             if current_row == height / 3 {
                 Self::draw_welcome_message()?;
             } else {
-                Self::draw_empty_row();
+                Self::draw_empty_row()?;
             }
             if current_row + 1 < height {
                 Terminal::print("\r\n")?;
