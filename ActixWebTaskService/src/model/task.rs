@@ -2,6 +2,7 @@ use serde::Serialize;
 use strum_macros::{Display, EnumString};
 use uuid::Uuid;
 
+#[derive(Serialize, EnumString, Display, Debug, Eq, PartialEq)]
 pub enum TaskState {
     NotStarted,
     InProgress,
@@ -10,7 +11,7 @@ pub enum TaskState {
     Failed,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug)]
 pub struct Task {
     pub user_uuid: String,
     pub task_uuid: String,
@@ -33,7 +34,7 @@ impl Task {
     }
 
     pub fn get_global_id(&self) -> String {
-        format!("{}_{}", self.user_uuid, self.task_uuid);
+        format!("{}_{}", self.user_uuid, self.task_uuid)
     }
 
     pub fn can_transition_to(&self, state: &TaskState) -> bool {

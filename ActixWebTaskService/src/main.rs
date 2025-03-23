@@ -1,7 +1,7 @@
 mod api;
 mod model;
 mod repository;
-use api::task::get_task;
+use api::task::{complete_task, fail_task, get_task, pause_task, start_task, submit_task};
 
 use actix_web::{middleware::Logger, web::Data, App, HttpServer};
 use repository::ddb::DDBRepository;
@@ -17,17 +17,22 @@ async fn main() -> std::io::Result<()> {
     // Pass in closure that sets up everything for the web application
     // Closure is ran everytime actix starts a new thread
     HttpServer::new(move || {
-        let ddb_repo::DDBRepository::init(
+        let ddb_repo: DDBRepository = DDBRepository::init(
             String::from("task"),
             config.clone(), // Create a copy for every thread
         );
         let ddb_data = Data::new(ddb_repo); // To pass shared data, need to use data struct that
-        // implements FromRequest trait
+                                            // implements FromRequest trait
         let logger = Logger::default();
         App::new()
             .wrap(logger)
             .app_data(ddb_data) // Shared state that will be injected into handler functions
             .service(get_task)
+            .service(submit_task)
+            .service(start_task)
+            .service(complete_task)
+            .service(pause_task)
+            .service(fail_task)
     })
     .bind(("127.0.0.1", 80))?
     .run()

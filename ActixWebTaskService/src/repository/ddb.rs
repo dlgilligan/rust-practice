@@ -17,7 +17,7 @@ fn required_item_value(
     key: &str,
     item: &HashMap<String, AttributeValue>,
 ) -> Result<String, DDBError> {
-    match item_value(key, value) {
+    match item_value(key, item) {
         Ok(Some(value)) => Ok(value),
         Ok(None) => Err(DDBError),
         Err(DDBError) => Err(DDBError),
@@ -30,7 +30,7 @@ fn item_value(
 ) -> Result<Option<String>, DDBError> {
     match item.get(key) {
         Some(value) => match value.as_s() {
-            Ok(value) => Ok(Some(val.clone())),
+            Ok(val) => Ok(Some(val.clone())),
             Err(_) => Err(DDBError),
         },
         None => Ok(None),
@@ -38,8 +38,7 @@ fn item_value(
 }
 
 fn item_to_task(item: &HashMap<String, AttributeValue>) -> Result<Task, DDBError> {
-    let state: TaskStatae = match TaskState::from_str(required_item_value("state", item)?.as_str())
-    {
+    let state: TaskState = match TaskState::from_str(required_item_value("state", item)?.as_str()) {
         Ok(value) => value,
         Err(_) => return Err(DDBError),
     };
@@ -99,8 +98,8 @@ impl DDBRepository {
             .key_condition_expression("#pK = :user_id and #sK = :task_uuid")
             .expression_attribute_names("#pK", "pK")
             .expression_attribute_names("#sK", "sK")
-            .expression_attribute_names(":user_id", user_uuid)
-            .expression_attribute_names(":task_uuid", task_uuid)
+            .expression_attribute_values(":user_id", user_uuid)
+            .expression_attribute_values(":task_uuid", task_uuid)
             .send()
             .await;
 
