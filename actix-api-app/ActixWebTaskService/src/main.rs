@@ -38,18 +38,14 @@ async fn main() -> std::io::Result<()> {
         }
     };
 
-    // Create shared app data
-    let mongo_data = Data::new(mongo_repo);
-    let redis_data = Data::new(redis_queue);
-
     // Pass in closure that sets up everything for the web application
     // Closure is ran everytime actix starts a new thread
     HttpServer::new(move || {
         let logger = Logger::default();
 
-        // Clone app data for this thread
-        let mongo_data = mongo_data.clone();
-        let redis_data = redis_data.clone();
+        // Create shared app data for this thread
+        let mongo_data = Data::new(mongo_repo.clone());
+        let redis_data = Data::new(redis_queue.clone());
 
         App::new()
             .wrap(logger)

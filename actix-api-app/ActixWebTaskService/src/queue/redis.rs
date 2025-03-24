@@ -9,6 +9,7 @@ pub struct TaskMessage {
     pub task_global_id: String,
 }
 
+#[derive(Clone)]
 pub struct RedisQueue {
     client: Client,
     queue_name: String,

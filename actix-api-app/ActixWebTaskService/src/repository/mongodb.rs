@@ -48,6 +48,7 @@ impl From<MongoDBError> for MongoRepoError {
     }
 }
 
+#[derive(Clone)]
 pub struct MongoRepository {
     collection: Collection<Document>,
 }
